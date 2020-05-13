@@ -1,0 +1,136 @@
+{
+  "functionList": [
+    {
+      "functionId": "test1",
+      "functionName": "测试功能1",
+      "layout": {
+        "styleName": "dark",
+        "showFilterPanel": "否",
+        "filterPanel_height": 40,
+        "row_columns": "2,2",
+        "rowHeightComputeType": "autoHeight",
+        "rowHeights": "",
+        "objectList": [
+          {
+            "objectId": "div1",
+            "dbName": "",
+            "dbSourceId": "",
+            "chartType": "line",
+            "background-color": "",
+            "x-axis": {},
+            "y-axis": {},
+            "series": [
+              {},
+              {}
+            ]
+          },
+          {
+            "objectId": "div2",
+            "dbName": "",
+            "dbSourceId": "",
+            "chartType": "line",
+            "background-color": "",
+            "x-axis": {},
+            "y-axis": {},
+            "series": [
+              {},
+              {}
+            ]
+          },
+          {
+            "objectId": "div3",
+            "dbName": "",
+            "dbSourceId": "",
+            "chartType": "line",
+            "background-color": "",
+            "x-axis": {},
+            "y-axis": {},
+            "series": [
+              {},
+              {}
+            ]
+          },
+          {
+            "objectId": "div4",
+            "dbName": "",
+            "dbSourceId": "",
+            "chartType": "line",
+            "background-color": "",
+            "x-axis": {},
+            "y-axis": {},
+            "series": [
+              {},
+              {}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "functionId": "test2",
+      "functionName": "测试功能2",
+      "layout": {
+        "styleName": "dark",
+        "showFilterPanel": "否",
+        "filterPanel_height": 40,
+        "row_columns": "2,2",
+        "rowHeightComputeType": "autoHeight",
+        "rowHeights": "",
+        "objectList": [
+          {
+            "objectId": "div1",
+            "dbName": "",
+            "dbSourceId": "",
+            "chartType": "line",
+            "background-color": "",
+            "x-axis": {},
+            "y-axis": {},
+            "series": [
+              {},
+              {}
+            ]
+          },
+          {
+            "objectId": "div2",
+            "dbName": "",
+            "dbSourceId": "",
+            "chartType": "line",
+            "background-color": "",
+            "x-axis": {},
+            "y-axis": {},
+            "series": [
+              {},
+              {}
+            ]
+          },
+          {
+            "objectId": "div3",
+            "dbName": "",
+            "dbSourceId": "",
+            "chartType": "line",
+            "background-color": "",
+            "x-axis": {},
+            "y-axis": {},
+            "series": [
+              {},
+              {}
+            ]
+          },
+          {
+            "objectId": "div4",
+            "dbName": "",
+            "dbSourceId": "",
+            "chartType": "line",
+            "background-color": "",
+            "x-axis": {},
+            "y-axis": {},
+            "series": [
+              {},
+              {}
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

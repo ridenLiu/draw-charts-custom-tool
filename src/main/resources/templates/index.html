@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href="./css/index.css" rel="stylesheet"/>
+    <link href="./js/jquery-easyui-1.7.0/themes/bootstrap/easyui.css" rel="stylesheet"/>
+    <link href="./js/jquery-easyui-1.7.0/themes/icon.css" rel="stylesheet"/>
+
+
+    <script src="./js/jquery-easyui-1.7.0/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/echarts-4.4.1/echarts.min.js"></script>
+    <script src="./js/jquery-easyui-1.7.0/jquery.easyui.min.js"></script>
+    <script src="./js/jquery-easyui-1.7.0/locale/easyui-lang-zh_CN.js"></script>
+
+    <script src="./js/chart-handler.js"></script>
+    <script src="./js/propertygrid-handler.js"></script>
+    <script src="./js/basic.js"></script>
+    <script src="./js/layouts.js"></script>
+
+
+</head>
+<body class="easyui-layout" style="width:100%;height:100%">
+<div data-options="region:'west',title:'项目列表',split:true" style="width:200px;">
+    <div id="projectTree" class="easyui-tree" style="width:100%;height:100%;">
+    </div>
+</div>
+<div data-options="region:'east',title:'参数设置',split:true" style="width:260px;">
+    <div id="propertySetting" class="easyui-layout" style="width:100%;height:100%;">
+        <div data-options="region:'north',split:true" style="height:100%;"><!--style="height:400px;"-->
+            <table id="pg" class="easyui-propertygrid" style="width:100%;height:100%"
+                   data-options="showGroup:true,scrollbarSize:0"></table>
+        </div>
+    </div>
+
+</div>
+<div data-options="region:'center',title:'布局预览'" style="background:#eee;">
+    <div id="cc" class="easyui-layout" style="width:100%;height:100%;">
+        <div data-options="region:'north',split:false" style="height:40px;text-align:right;">
+            <input style="height:28px;width:70px;margin-top:5px;margin-right:5px" id="previewBtn"
+                   class="easyui-linkbutton" value="预览" onclick="preView()"/>
+        </div>
+        <div data-options="region:'center'" style="background:#fff;">
+            <div id="container" class="dark">
+                <!--<div class="group_select">
+                   <div class="selector">0</div>
+                </div>-->
+                <div id="layoutdiv">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var controlList = [{"name": "1", "picName": "", "category": "charts", "controlType": "line"}];
+
+    window.onload = function () {
+        setGlobalGridData('pie');
+        // $('#pg').propertygrid('reload');
+        // $('#pg').propertygrid('loadData', globalGridData);
+    }
+    // ==================================
+    var projectData = null;
+    var curSelFunction = null;
+
+    function preView() {// todo ==========
+        var rowCols = getPropertyValue("每行列数");
+        if (rowCols == "") {
+            alert("请设置每行列数！");
+            return;
+        }
+        var rowHeight = getPropertyValue("每行行高");
+        if (rowHeight == "") {
+            alert("请设置每行行高！");
+            return;
+        }
+        var ColList = rowCols.split(',');
+        var heightList = rowHeight.split(',');
+        var rowHeightComputeTpye = getPropertyValue("行高计算方式");
+        if (rowHeightComputeTpye == "") {
+            alert("请设置行高计算方式！");
+            return;
+        }
+        if (rowHeightComputeTpye != "autoHeight") {
+            if (ColList.length != heightList.length) {
+                alert("每行行高数和行数不匹配，请检查！");
+                return;
+            }
+        }
+        var showFilterRow = getPropertyValue("显示选择器行");
+        var showFilterRowHeight = getPropertyValue("选择器行高度");
+        var containerStyle = getPropertyValue("布局样式");
+        var containerObj = document.getElementById("container");
+        containerObj.className = containerStyle;
+
+        var rowColList = [];
+        var rowHeightList = [];
+        for (var j = 0; j < ColList.length; j++) {
+            rowColList.push(ColList[j]);
+            if (rowHeightComputeTpye != "autoHeight") {
+                rowHeightList.push(heightList[j]);
+            }
+        }
+        createLayout('layoutdiv', rowColList, rowHeightList, rowHeightComputeTpye, showFilterRow, showFilterRowHeight, 75);
+        drawObj();
+    }
+
+    function getPropertyValue(name) {
+        var result = "";
+        var dataObj = $('#pg').propertygrid('getData');
+        if (dataObj != null && dataObj != undefined) {
+            for (var i = 0; i < dataObj.rows.length; i++) {
+                if (dataObj.rows[i].name == name) {
+                    result = dataObj.rows[i].value;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    function setPropertyValue(name, value) {
+        //var result="";
+        var dataObj = $('#pg').propertygrid('getData');
+        if (dataObj != null && dataObj != undefined) {
+            for (var i = 0; i < dataObj.rows.length; i++) {
+                if (dataObj.rows[i].name == name) {
+                    //result = dataObj.rows[i].value;
+                    dataObj.rows[i].value = value;
+                    break;
+                }
+            }
+            $('#pg').propertygrid('loadData', dataObj);
+        }
+        //return result;
+    }
+
+
+    function drawObj() {
+        // var objIds = getPropertyValue("绘制对象ID");
+        // var objList = objIds.split(',');
+        // for (var i = 0; i < objList.length; i++) {
+        //     var chartDiv = getDomObj(objList[i]);
+        //     if (chartDiv != null) {
+        //         drawChart(chartDiv, chartOptionMap[objList[i]]);
+        //     }
+        // }
+        // 渲染全部视图
+        for (var chartDomId in chartOptionMap) {
+            var chartDom = getDomObj(chartDomId);
+            drawChart(chartDom, chartOptionMap[chartDomId]);
+        }
+
+    }
+
+    function loadProjectData() {
+        $.ajax({
+            url: './data',// static/json/project.json
+            async: true,
+            data: {
+                projectId: ['9d981684b13f25dec11d857ceb84ec0c', '2d981684b13f25dec11d857ceb84ec01']
+            },
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                projectData = data;
+                if (data != null && data != undefined) {
+                    for (var i = 0; i < data.length; i++) {
+                        var nodeData = [];
+                        var projectName = data[i].projectName;
+                        var functionList = data[i].functionList;
+                        var childNodeData = [];
+                        if (functionList != null && functionList != undefined) {
+                            for (var j = 0; j < functionList.length; j++) {
+                                var functionId = functionList[j].functionId;
+                                var functionName = functionList[j].functionName;
+                                childNodeData.push({
+                                    "id": functionId,
+                                    "text": functionName,
+                                    "attributes": functionList[j]
+                                });
+                            }
+                        }
+                        nodeData.push({"id": projectName, "text": projectName, "children": childNodeData});
+                        $('#projectTree').tree('append', {parent: null, data: nodeData});
+                    }
+                }
+            }
+        });
+    }
+
+    $(function () {
+        $('#projectTree').tree({
+            onClick: function (node) {
+                alert(node.attributes.layout.styleName);
+                // todo 临时删除
+                // $.ajax({
+                //     type: "post",
+                //     url: "${pageContext.request.contextPath }/fileProcess/saveCustomData",
+                //     // data:'{"id":"1","name":"电冰箱","price":"1999"}',
+                //     contentType: "application/json;charset=utf-8",
+                //     success: function (data) {
+                //         alert(data);
+                //     }
+                // });
+            }
+        });
+        loadProjectData();
+    })
+
+
+</script>
+</body>
+</html>
